@@ -12,8 +12,6 @@ export const InsertApplication = BaseSchema.pick({
   email: true,
   phone: true,
   courseId: true,
-  semester: true,
-  degree: true,
 }).extend({
   fields: z.array(z.number().int().positive()),
 })
@@ -25,8 +23,6 @@ export const UpdateApplication = BaseSchema.partial()
     email: true,
     phone: true,
     courseId: true,
-    semester: true,
-    degree: true,
     messaged: true,
     talked: true,
     clubBriefed: true,

@@ -11,8 +11,6 @@ CREATE TABLE IF NOT EXISTS "applications" (
 	"email" varchar(255) NOT NULL,
 	"phone" varchar(50),
 	"course_id" integer NOT NULL,
-	"semester" integer,
-	"degree" varchar(50),
 	"experience" varchar,
 	"status" "applicationstatus" DEFAULT 'pending' NOT NULL,
 	"messaged" boolean DEFAULT false,

@@ -209,8 +209,6 @@ function closeDetailDialog(): void {
           <Column field="firstName" header="First name" sortable />
           <Column field="lastName" header="Last name" sortable />
           <Column field="course.name" header="Course" sortable />
-          <Column field="semester" header="Semester" sortable />
-          <Column field="degree" header="Degree" sortable />
           <Column field="fields" header="Fields" sortable>
             <template #body="slotProps">
               {{ formatFields(slotProps.data.fields) }}

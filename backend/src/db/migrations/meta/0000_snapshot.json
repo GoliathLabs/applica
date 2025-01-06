@@ -44,18 +44,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "semester": {
-          "name": "semester",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "degree": {
-          "name": "degree",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": false
-        },
         "experience": {
           "name": "experience",
           "type": "varchar",

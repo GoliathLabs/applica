@@ -50,8 +50,6 @@ export const applications = pgTable('applications', {
   courseId: integer('course_id')
     .notNull()
     .references(() => courses.id),
-  semester: integer('semester'),
-  degree: varchar('degree', { length: 50 }),
   experience: varchar('experience'),
   status: applicationStatus('status').notNull().default('pending'),
   messaged: boolean('messaged').default(false),

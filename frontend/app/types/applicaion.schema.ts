@@ -10,7 +10,6 @@ export const AddApplication = z.object({
   degree: z.string().max(50).nullish(),
   courseId: z.number(),
   fields: z.array(z.number()),
-  experience: z.string().nullish(),
   messaged: z.boolean().optional(),
   talked: z.boolean().optional(),
   clubBriefed: z.boolean().optional(),

@@ -104,15 +104,6 @@ const onSubmit = handleSubmit(async (values) => {
           multi
         />
 
-        <FormInputText
-          name="experience"
-          label="Experience"
-          type="area"
-          auto-resize
-          rows="4"
-          class="sm:col-span-2"
-        />
-
         <Divider class="sm:col-span-2" />
 
         <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 sm:col-span-2">

@@ -75,7 +75,8 @@ const onSubmit = handleSubmit(async (values) => {
         <FormInputText name="firstName" label="First name" />
         <FormInputText name="lastName" label="Last name" />
 
-        <FormInputText name="email" label="Email" class="sm:col-span-2" />
+        <FormInputText name="email" label="Private Email" placeholder="Enter your private email address" class="sm:col-span-2" />
+        <small class="sm:col-span-2">Please provide your private email address, not your THA email address.</small>
         <FormInputText name="phone" label="Phone" class="sm:col-span-2" />
 
         <FormInputText name="degree" label="Degree" />

@@ -1,34 +1,35 @@
 <script setup lang="ts">
-import { z } from 'zod'
+import { z } from 'zod';
 
 definePageMeta({
   layout: false,
   middleware: ['not-authorized'],
-})
+});
 
-const userStore = useUserStore()
+const userStore = useUserStore();
 
 const { handleSubmit, isSubmitting, resetForm, setErrors } = useForm({
   validationSchema: toTypedSchema(
     z.object({
-      userName: z.string(),
-      password: z.string(),
+      userName: z.string().min(3, 'Username must be at least 3 characters long'),
+      password: z.string().min(6, 'Password must be at least 6 characters long'),
     })
   ),
-})
+});
 
 const onSubmit = handleSubmit(async (values) => {
   try {
-    await userStore.login(values.userName, values.password)
-    navigateTo('/')
-  } catch {
-    resetForm()
+    await userStore.login(values.userName, values.password);
+    navigateTo('/');
+  } catch (error) {
+    console.error("Login error:", error);
+    resetForm();
     setErrors({
-      userName: 'Invalid',
-      password: 'Invalid',
-    })
+      userName: 'Invalid username or password',
+      password: 'Invalid username or password',
+    });
   }
-})
+});
 </script>
 
 <template>

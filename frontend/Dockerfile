@@ -1,5 +1,5 @@
 # Base image
-FROM oven/bun:1 AS base
+FROM oven/bun:latest AS base
 WORKDIR /usr/src/app
 ENV NODE_ENV=production
 

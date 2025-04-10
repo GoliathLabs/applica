@@ -220,7 +220,7 @@ app.post('/status', zValidator('json', UpdateApplicationStatus), async (c) => {
       const pass = randomPassword()
 
       // Build and insert the new user entry
-      let userEntry: Record<string, string | string[]> = {
+      const userEntry: Record<string, string | string[]> = {
         objectClass: ['inetOrgPerson', 'posixAccount'],
         sn: application.lastName,
         uid: uid,

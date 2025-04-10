@@ -1,90 +1,82 @@
 <script setup lang="ts">
-import type DataTable from 'primevue/datatable'
+import type DataTable from 'primevue/datatable';
 import type {
   DataTableFilterMeta,
   DataTableFilterMetaData,
-} from 'primevue/datatable'
-import type { Application, ApplicationStatus, Field } from '~/types/applicaion'
+} from 'primevue/datatable';
+import type { Application, ApplicationStatus, Field } from '~/types/applicaion';
 
 definePageMeta({
   middleware: ['authorized'],
-})
+});
 
-const applicationsStore = useApplicationsStore()
+const applicationsStore = useApplicationsStore();
 await useAsyncData('applications', () =>
   applicationsStore.fetchApplications().then(() => true)
-)
+);
 
-const confirm = useConfirm()
-const toast = useToast()
+const confirm = useConfirm();
+const toast = useToast();
 
-const dataTable = useTemplateRef<InstanceType<typeof DataTable>>('data-table')
-const selected = ref<Application[]>([])
-const detail = ref<Application>()
+const dataTable = useTemplateRef<InstanceType<typeof DataTable>>('data-table');
+const selected = ref<Application[]>([]);
+const detail = ref<Application | null>(null);
 
-const detailDialog = ref(false)
-const statusOptions = ['pending', 'accepted', 'declined']
+const detailDialog = ref(false);
+const statusOptions = ['pending', 'accepted', 'declined'];
 const filters = ref<DataTableFilterMeta>({
   global: { value: '', matchMode: 'contains' },
   status: { value: '', matchMode: 'equals' },
-})
+});
 
 function getFilterData(name: string): DataTableFilterMetaData {
-  return filters.value[name] as DataTableFilterMetaData
+  return filters.value[name] as DataTableFilterMetaData;
 }
 
 function getSeverity(status: ApplicationStatus): string {
-  switch (status) {
-    case 'pending':
-      return 'info'
-    case 'accepted':
-      return 'success'
-    case 'declined':
-      return 'danger'
-  }
+  const severityMapping = {
+    pending: 'info',
+    accepted: 'success',
+    declined: 'danger',
+  };
+  return severityMapping[status];
 }
 
 function formatFields(fields: Field[]): string {
-  return fields.map((field) => field.name).join(', ')
+  return fields.map((field) => field.name).join(', ');
 }
 
 function formatDate(date: string): string {
-  return new Date(date).toLocaleDateString()
+  return new Date(date).toLocaleDateString();
 }
 
-function confirmStatusChange(
-  application: Application,
-  status: ApplicationStatus
-): void {
+function confirmStatusChange(application: Application, status: ApplicationStatus): void {
   confirm.require({
     header: 'Confirmation',
     icon: 'pi pi-exclamation-triangle',
-    message: `
-      Are you sure you want to ${status === 'accepted' ? 'accept' : 'decline'}
-      the application of ${application.firstName} ${application.lastName}`,
+    message: `Are you sure you want to ${status === 'accepted' ? 'accept' : 'decline'} the application of ${application.firstName} ${application.lastName}`,
     rejectProps: {
       severity: 'secondary',
       outlined: true,
     },
     accept: async () => {
-      await applicationsStore.setApplicationStatus(application, status)
+      await applicationsStore.setApplicationStatus(application, status);
       toast.add({
         severity: 'success',
         summary: 'Status changed',
-        detail: `
-          You have ${status === 'accepted' ? 'accepted' : 'declined'} the application`,
+        detail: `You have ${status === 'accepted' ? 'accepted' : 'declined'} the application`,
         life: 3000,
-      })
+      });
     },
-  })
+  });
 }
 
 function confirmDelete(): void {
+  const count = selected.value.length;
   confirm.require({
     header: 'Confirmation',
     icon: 'pi pi-exclamation-triangle',
-    message: `
-      Are you sure you want to delete all ${selected.value.length} selected applications`,
+    message: `Are you sure you want to delete all ${count} selected applications`,
     rejectProps: {
       severity: 'secondary',
       outlined: true,
@@ -92,28 +84,27 @@ function confirmDelete(): void {
     accept: async () => {
       const deleteRequests = selected.value.map((application) =>
         applicationsStore.deleteApplication(application)
-      )
+      );
 
-      await Promise.all(deleteRequests)
+      await Promise.all(deleteRequests);
 
       toast.add({
         severity: 'success',
         summary: 'Deleted',
-        detail: `
-          You have deleted the applications`,
+        detail: `You have deleted the applications`,
         life: 3000,
-      })
+      });
     },
-  })
+  });
 }
 
 function openDetailDialog(application?: Application): void {
-  detail.value = application
-  detailDialog.value = true
+  detail.value = application || null;
+  detailDialog.value = true;
 }
 
 function closeDetailDialog(): void {
-  detail.value = undefined
+  detail.value = null;
 }
 </script>
 

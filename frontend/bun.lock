@@ -7,6 +7,7 @@
         "@nuxt/eslint": "^1.3.0",
         "@nuxt/fonts": "^0.11.1",
         "@pinia/nuxt": "^0.11.0",
+        "@primevue/forms": "^4.3.3",
         "@primevue/nuxt-module": "^4.3.3",
         "@primevue/themes": "^4.3.3",
         "@unocss/nuxt": "^66.1.0-beta.10",
@@ -316,6 +317,8 @@
 
     "@poppinss/exception": ["@poppinss/exception@1.2.1", "", {}, "sha512-aQypoot0HPSJa6gDPEPTntc1GT6QINrSbgRlRhadGW2WaYqUK3tK4Bw9SBMZXhmxd3GeAlZjVcODHgiu+THY7A=="],
 
+    "@primeuix/forms": ["@primeuix/forms@0.0.4", "", { "dependencies": { "@primeuix/utils": "^0.4.0" } }, "sha512-WKrxZPM9fPAEsM0xcTrOOJn86MbfOEzPwSwpO94Y7RtguWw+1nrvqYNzCcmVqO6zBi0BVMihoWxMKFIRzTOuZg=="],
+
     "@primeuix/styled": ["@primeuix/styled@0.5.1", "", { "dependencies": { "@primeuix/utils": "^0.5.3" } }, "sha512-5Ftw/KSauDPClQ8F2qCyCUF7cIUEY4yLNikf0rKV7Vsb8zGYNK0dahQe7CChaR6M2Kn+NA2DSBSk76ZXqj6Uog=="],
 
     "@primeuix/styles": ["@primeuix/styles@1.0.3", "", { "dependencies": { "@primeuix/styled": "^0.5.1" } }, "sha512-yHj/Q+fosJ1736Ty5lRbpqhKa9piou+xZPPppNHUDshq0+XhrFwDGggvPGmDAJyUIM+ChM/Nj8lPY/AwTNXAkg=="],
@@ -327,6 +330,8 @@
     "@primevue/auto-import-resolver": ["@primevue/auto-import-resolver@4.3.3", "", { "dependencies": { "@primevue/metadata": "4.3.3" } }, "sha512-CwQPlG8IzDySOwF8N0Q0rLv76awCH7SzYt+RHu1AO/HZEsdCorclIoJO6TrJYevenlhxialprRqpIV52McoRpw=="],
 
     "@primevue/core": ["@primevue/core@4.3.3", "", { "dependencies": { "@primeuix/styled": "^0.5.0", "@primeuix/utils": "^0.5.1" }, "peerDependencies": { "vue": "^3.5.0" } }, "sha512-kSkN5oourG7eueoFPIqiNX3oDT/f0I5IRK3uOY/ytz+VzTZp5yuaCN0Nt42ZQpVXjDxMxDvUhIdaXVrjr58NhQ=="],
+
+    "@primevue/forms": ["@primevue/forms@4.3.3", "", { "dependencies": { "@primeuix/forms": "^0.0.4", "@primeuix/utils": "^0.5.1", "@primevue/core": "4.3.3" } }, "sha512-GZYMd8wp+7/4DVMoGGUtRkAHw352peT3pgwgzaFYQqNIjxxGw9eI253XTxrppRCowrGJ2jEe80p9WfHi087B1g=="],
 
     "@primevue/icons": ["@primevue/icons@4.3.3", "", { "dependencies": { "@primeuix/utils": "^0.5.1", "@primevue/core": "4.3.3" } }, "sha512-ouQaxHyeFB6MSfEGGbjaK5Qv9efS1xZGetZoU5jcPm090MSYLFtroP1CuK3lZZAQals06TZ6T6qcoNukSHpK5w=="],
 
@@ -1757,6 +1762,8 @@
     "@poppinss/colors/kleur": ["kleur@4.1.5", "", {}, "sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ=="],
 
     "@poppinss/dumper/supports-color": ["supports-color@10.0.0", "", {}, "sha512-HRVVSbCCMbj7/kdWF9Q+bbckjBHLtHMEoJWlkmYzzdwhYMkjkOwubLM6t7NbWKjgKamGDrWL1++KrjUO1t9oAQ=="],
+
+    "@primeuix/forms/@primeuix/utils": ["@primeuix/utils@0.4.1", "", {}, "sha512-5+1NLfyna+gLRPeFTo+xlR0tfPVLuVdidbeahAMLkQga5Rw0LxyUBCyD2/Zv2JkV69o2T+hpEDyddl3VdnYoBw=="],
 
     "@primevue/nuxt-module/pathe": ["pathe@1.1.2", "", {}, "sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ=="],
 

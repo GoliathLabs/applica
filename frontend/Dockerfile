@@ -6,7 +6,7 @@ ENV NODE_ENV=production
 # Stage 1
 FROM base AS build
 # Install dependencies
-COPY bun.lockb package.json ./
+COPY bun.lock package.json ./
 RUN bun install --frozen-lockfile
 # Build app
 COPY . .

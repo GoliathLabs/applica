@@ -3,7 +3,7 @@ import { applications, applicationsFields } from '../db';
 import { createInsertSchema } from 'drizzle-zod';
 
 const BaseSchema = createInsertSchema(applications, {
-  email: (z) => z.email.email(),
+  email: (z) => z.email().email(),
 });
 
 export const InsertApplication = BaseSchema.pick({

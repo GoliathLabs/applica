@@ -17,6 +17,7 @@ import { createHash } from 'crypto'
 import { AlreadyExistsError } from 'ldapts'
 import { HTTPException } from 'hono/http-exception'
 import { StatusCodes } from 'http-status-codes'
+import { sendEmail } from '../services/emailService';
 
 export const app = new Hono().basePath('/applications')
 
@@ -263,6 +264,7 @@ app.post('/status', zValidator('json', UpdateApplicationStatus), async (c) => {
           )
 
           console.info(`User ${cn} with password ${pass} added`)
+          await sendEmail(rawApplication.email, uid, pass);
 
           break
         } catch (err) {

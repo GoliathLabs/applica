@@ -29,7 +29,7 @@ services:
       - SMTP_PASS=${SMTP_PASS}
       - SMTP_FROM_NAME=${SMTP_FROM_NAME}
       - SMTP_FROM_EMAIL=${SMTP_FROM_EMAIL}
-      - SMTP_FROM_EMAIL=${SMTP_FROM_EMAIL}
+      - SMTP_REPLY_TO=${SMTP_REPLY_TO}
     depends_on:
       - postgres
     profiles:

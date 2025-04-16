@@ -1,7 +1,6 @@
 import nodemailer from 'nodemailer';
 import type { SentMessageInfo } from 'nodemailer';
 import { getEnv } from '../common/util';
-
 /**
  * Create reusable transporter with nodemailer settings.
  */

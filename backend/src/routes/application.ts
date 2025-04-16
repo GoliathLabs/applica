@@ -12,7 +12,7 @@ import { eq } from 'drizzle-orm'
 import { jwt } from 'hono/jwt'
 import { env } from 'hono/adapter'
 import { getLdapClient, ldapConfig } from '../ldap'
-import { randomNumber, randomPassword } from '../common/util'
+import { randomNumber, randomPassword, normalizeSpecialCharacters } from '../common/util'
 import { createHash } from 'crypto'
 import { AlreadyExistsError } from 'ldapts'
 import { HTTPException } from 'hono/http-exception'
@@ -215,25 +215,25 @@ app.post('/status', zValidator('json', UpdateApplicationStatus), async (c) => {
       )
 
       // Create the new users uid and password
-      const uid = Array.from(application.firstName)[0]
-        .concat(application.lastName)
-        .toLowerCase()
-      const pass = randomPassword()
+      const uid = normalizeSpecialCharacters(
+        Array.from(application.firstName)[0].concat(application.lastName).toLowerCase()
+      );
+      const pass = randomPassword();
 
       // Build and insert the new user entry
       const userEntry: Record<string, string | string[]> = {
         objectClass: ['inetOrgPerson', 'posixAccount'],
-        sn: application.lastName,
+        sn: normalizeSpecialCharacters(application.lastName),
         uid: uid,
         uidNumber: uidPrefix + ++maxUidNumber,
         gidNumber: gidEntries[0]['gidNumber'] as string,
         homeDirectory: `/home/${uid}`,
         loginShell: '/bin/false',
-        gecos: `${application.firstName} ${application.lastName}`,
-        givenName: application.firstName,
+        gecos: `${normalizeSpecialCharacters(application.firstName)} ${normalizeSpecialCharacters(application.lastName)}`,
+        givenName: normalizeSpecialCharacters(application.firstName),
         mail: application.email,
         userPassword: `{SHA}${createHash('sha1').update(pass).digest('base64')}`,
-      }
+      };
 
       if (application.phone) {
         userEntry['mobile'] = application.phone

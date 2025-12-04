@@ -34,14 +34,14 @@ jobs:
           echo "AUTHOR=$AUTHOR" >> $GITHUB_ENV
 
       - name: Extract metadata (tags, labels) for Docker backend
-        id: meta
+        id: meta-backend
         uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-backend
           labels: |
             org.opencontainers.image.authors=${{ env.AUTHOR }}
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
-            org.opencontainers.image.created=${{ steps.meta.outputs.created }}
+            org.opencontainers.image.created=${{ steps.meta-backend.outputs.created }}
 
       - name: Build Docker backend image
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
@@ -53,21 +53,21 @@ jobs:
           load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta-backend.outputs.tags }}
+          labels: ${{ steps.meta-backend.outputs.labels }}
           build-args: |
             VERSION=${{ github.head_ref || github.ref_name }}
             COMMIT=${{ github.sha }}
 
       - name: Extract metadata (tags, labels) for Docker frontend
-        id: meta
+        id: meta-frontend
         uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend
           labels: |
             org.opencontainers.image.authors=${{ env.AUTHOR }}
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
-            org.opencontainers.image.created=${{ steps.meta.outputs.created }}
+            org.opencontainers.image.created=${{ steps.meta-frontend.outputs.created }}
       - name: Build Docker frontend image
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
         with:
@@ -78,10 +78,8 @@ jobs:
           load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta-frontend.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             VERSION=${{ github.head_ref || github.ref_name }}
             COMMIT=${{ github.sha }}
-      - name: Inspect Docker image
-        run: docker image inspect ${{ steps.meta.outputs.tags }}

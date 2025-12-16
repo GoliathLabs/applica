@@ -3,13 +3,13 @@ import Aura from '@primevue/themes/aura'
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
-      apiBaseURL: 'http://localhost:8080/api',
+      apiBaseURL: process.env.PUBLIC_API_BASE_URL || process.env.API_BASE_URL || 'http://localhost:8080/api',
     },
   },
   future: {
     compatibilityVersion: 4,
   },
-  compatibilityDate: '2024-10-12',
+  compatibilityDate: '2025-10-12',
   devtools: {
     enabled: true,
   },

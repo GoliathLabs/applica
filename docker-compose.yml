@@ -7,6 +7,9 @@ services:
       - "3000:3000"
     depends_on:
       - backend
+    environment:
+      - PUBLIC_API_BASE_URL=http://backend:8080/api
+      - NODE_ENV=development
     profiles:
       - prod
 
@@ -23,6 +26,8 @@ services:
       - LDAP_ADMIN_PASSWORD=${LDAP_ADMIN_PASSWORD}
       - LDAP_LEADER_DN=${LDAP_LEADER_DN}
       - JWT_SECRET=${JWT_SECRET}
+      - FRONTEND_ORIGIN=http://frontend:3000
+      - NODE_ENV=development
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_PORT=${SMTP_PORT}
       - SMTP_USER=${SMTP_USER}

@@ -12,7 +12,10 @@ definePageMeta({
 
 const applicationsStore = useApplicationsStore();
 await useAsyncData('applications', () =>
-  applicationsStore.fetchApplications().then(() => true)
+  Promise.all([
+    applicationsStore.fetchApplications(),
+    applicationsStore.fetchFieldsAndCourses(),
+  ]).then(() => true)
 );
 
 const confirm = useConfirm();

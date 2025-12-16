@@ -13,6 +13,12 @@ const visible = defineModel<boolean>('visible')
 const applicationsStore = useApplicationsStore()
 const { courses, fields } = storeToRefs(applicationsStore)
 
+onMounted(() => {
+  if (!courses.value.length || !fields.value.length) {
+    applicationsStore.fetchFieldsAndCourses().catch(() => {})
+  }
+})
+
 const { handleSubmit, isSubmitting, resetForm } = useForm({
   validationSchema: toTypedSchema(AddApplication),
 })

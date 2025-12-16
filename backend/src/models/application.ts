@@ -3,8 +3,27 @@ import { applications, applicationsFields } from '../db';
 import { createInsertSchema } from 'drizzle-zod';
 
 const BaseSchema = createInsertSchema(applications, {
-  email: (z) => z.email().email(),
+  email: (z) => z.string().email(),
 });
+
+const nameString = () =>
+  z
+    .string()
+    .min(1)
+    .max(100)
+    .transform((s) => s.trim());
+
+const optionalString = (max = 255) =>
+  z
+    .string()
+    .max(max)
+    .transform((s) => s.trim())
+    .optional();
+
+const phoneSchema = z
+  .string()
+  .regex(/^\+?[0-9 \-()]{6,20}$/, 'Invalid phone format')
+  .optional();
 
 export const InsertApplication = BaseSchema.pick({
   firstName: true,
@@ -17,7 +36,16 @@ export const InsertApplication = BaseSchema.pick({
   experience: true,
 })
   .extend({
-    fields: z.array(z.number().int().positive()).nonempty(),
+    firstName: nameString(),
+    lastName: nameString(),
+    email: z.string().email().max(255),
+    phone: phoneSchema,
+    degree: optionalString(50),
+    experience: optionalString(2000),
+    fields: z
+      .array(z.number().int().positive())
+      .min(1)
+      .max(10),
   });
 
 export const UpdateApplication = BaseSchema.partial()
@@ -38,7 +66,17 @@ export const UpdateApplication = BaseSchema.partial()
   })
   .extend({
     id: z.number().int().positive(),
-    fields: z.array(z.number().int().positive()).nonempty(),
+    firstName: nameString().optional(),
+    lastName: nameString().optional(),
+    email: z.string().email().max(255).optional(),
+    phone: phoneSchema,
+    degree: optionalString(50),
+    experience: optionalString(2000),
+    fields: z
+      .array(z.number().int().positive())
+      .min(0)
+      .max(10)
+      .optional(),
   });
 
 export const UpdateApplicationStatus = BaseSchema.pick({

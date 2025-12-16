@@ -2,15 +2,24 @@ import { StatusCodes } from 'http-status-codes'
 
 type Entry = { count: number; reset: number }
 
-export function rateLimit(opts?: { windowMs?: number; max?: number }) {
+export function rateLimit(opts?: { windowMs?: number; max?: number; methods?: string[] }) {
   const windowMs = opts?.windowMs ?? 60_000
   const max = opts?.max ?? 60
+  const methods = opts?.methods?.map((m) => m.toUpperCase())
 
   // Simple in-memory store. For production, replace with Redis.
   const store = new Map<string, Entry>()
 
   return async (c: any, next: any) => {
     try {
+      // Only enforce for configured HTTP methods (if provided)
+      if (methods && methods.length > 0) {
+        const reqMethod = (c.req.method || '').toUpperCase()
+        if (!methods.includes(reqMethod)) {
+          return next()
+        }
+      }
+
       // Determine client IP (best-effort)
       const ip =
         c.req.headers.get('x-forwarded-for') ||

@@ -16,7 +16,8 @@ app.use(limitBodySize(1024 * 100), logger(), secureHeaders(), prettyJSON(), cors
 
 // Apply rate limiting to the public applications endpoints (e.g., POST /applications)
 // Configure: 30 requests per minute per IP by default
-app.use('/applications', rateLimit({ windowMs: 60_000, max: 30 }))
+// Apply rate limiting to POST on the public applications endpoint: 10 requests/min per IP
+app.use('/applications', rateLimit({ windowMs: 60_000, max: 10, methods: ['POST'] }))
 
 app.route('/', applications.app);
 app.route('/', fields.app);

@@ -282,7 +282,7 @@ app.post('/status', zValidator('json', UpdateApplicationStatus), async (c) => {
               : userEntry
           )
 
-          logger.info(`User ${cn} created`, { email: rawApplication.email })
+              logger.info(`User ${cn} created`, { email: rawApplication.email, requestId: c.get?.('requestId') })
           await sendEmail(rawApplication.email, uid, pass);
 
           break
@@ -308,6 +308,7 @@ app.post('/status', zValidator('json', UpdateApplicationStatus), async (c) => {
 
       // If LDAP reported unavailable, translate to 503
       if (err instanceof Error && err.message === 'LDAP unavailable') {
+        logger.error('LDAP unavailable during user provisioning', { requestId: c.get?.('requestId'), err: String(err) })
         throw new HTTPException(StatusCodes.SERVICE_UNAVAILABLE, {
           message: 'User provisioning service unavailable',
         })

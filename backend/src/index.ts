@@ -5,6 +5,7 @@ import { secureHeaders } from 'hono/secure-headers';
 import { prettyJSON } from 'hono/pretty-json';
 import { applications, fields, courses, auth } from './routes';
 import { limitBodySize } from './middleware/limitBodySize'
+import { requestIdMiddleware } from './middleware/requestId'
 import { HTTPException } from 'hono/http-exception';
 import { rateLimit } from './middleware/rateLimit'
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
@@ -30,6 +31,8 @@ const FRONTEND_ORIGINS = (process.env.FRONTEND_ORIGIN || 'http://localhost:3000'
   .map((s) => s.trim())
 
 app.use(
+  // attach request id early for correlation
+  requestIdMiddleware(),
   limitBodySize(1024 * 100),
   // Use structured logger middleware that proxies to console
   async (c, next) => {

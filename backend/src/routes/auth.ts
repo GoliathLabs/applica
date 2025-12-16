@@ -18,7 +18,7 @@ app.post('/login', zValidator('json', Login), async (c) => {
     ldapAdmin = await getLdapClient()
   } catch (err) {
     // LDAP backend unavailable
-    logger.error('LDAP unavailable for login', { err: String(err) })
+    logger.error('LDAP unavailable for login', { err: String(err), requestId: c.get?.('requestId') })
     throw new HTTPException(StatusCodes.SERVICE_UNAVAILABLE, {
       message: 'Authentication service unavailable',
     })
@@ -79,7 +79,7 @@ app.post('/login', zValidator('json', Login), async (c) => {
   } catch (err) {
     if (err instanceof HTTPException) throw err
 
-    logger.warn('Authentication failed', { err: String(err) })
+    logger.warn('Authentication failed', { err: String(err), requestId: c.get?.('requestId') })
 
     // For LDAP specific errors we return a generic unauthorized to avoid leaking details
     throw new HTTPException(StatusCodes.UNAUTHORIZED, {

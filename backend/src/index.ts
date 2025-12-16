@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { logger } from 'hono/logger';
+// removed hono logger import to avoid name collision with app logger
 import { cors } from 'hono/cors';
 import { secureHeaders } from 'hono/secure-headers';
 import { prettyJSON } from 'hono/pretty-json';
@@ -11,12 +11,14 @@ import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 
 // Ensure JWT secret is set in production; warn in development
 const JWT_SECRET = process.env.JWT_SECRET
+import { logger as appLogger } from './common/logger'
+
 if (!JWT_SECRET) {
   if (process.env.NODE_ENV === 'production') {
-    console.error('JWT_SECRET must be set in production environment')
+    appLogger.error('JWT_SECRET must be set in production environment')
     process.exit(1)
   } else {
-    console.warn('JWT_SECRET is not set. Protected routes will reject requests if used.');
+    appLogger.warn('JWT_SECRET is not set. Protected routes will reject requests if used.');
   }
 }
 
@@ -29,7 +31,12 @@ const FRONTEND_ORIGINS = (process.env.FRONTEND_ORIGIN || 'http://localhost:3000'
 
 app.use(
   limitBodySize(1024 * 100),
-  logger(),
+  // Use structured logger middleware that proxies to console
+  async (c, next) => {
+    // simple request logging
+    appLogger.info('incoming request', { method: c.req.method, url: c.req.url })
+    return next()
+  },
   secureHeaders(),
   // Add a strict CSP header in production
   async (c, next) => {
@@ -72,7 +79,7 @@ app.onError((err, c) => {
   if (err instanceof HTTPException) {
     return c.json({ message: err.message }, err.status);
   } else {
-    console.error('Internal server error: ', err);
+    appLogger.error('Internal server error', { err: String(err) })
 
     return c.json(
       { message: ReasonPhrases.INTERNAL_SERVER_ERROR },

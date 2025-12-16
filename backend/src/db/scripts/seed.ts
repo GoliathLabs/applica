@@ -1,9 +1,10 @@
 import { db } from '../db'
 import { courses, fields, applications, applicationsFields } from '../schema'
+import { logger } from '../../common/logger'
 
 async function seedDatabase(): Promise<void> {
   try {
-    console.log('seeding database...')
+    logger.info('seeding database...')
 
     await db.transaction(async (tx) => {
       const insertedCourses = await tx
@@ -78,9 +79,9 @@ async function seedDatabase(): Promise<void> {
       ])
     })
 
-    console.log('seeding completed successfully')
+    logger.info('seeding completed successfully')
   } catch (err) {
-    console.error(err)
+    logger.error('seeding failed', { err: String(err) })
     process.exit(1)
   }
 

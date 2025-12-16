@@ -1,15 +1,16 @@
 import { migrate } from 'drizzle-orm/postgres-js/migrator'
 import { migrateDb } from '../db'
+import { logger } from '../../common/logger'
 
 async function runMigrations(): Promise<void> {
   try {
-    console.log('running database migrations...')
+    logger.info('running database migrations...')
     await migrate(migrateDb, {
       migrationsFolder: 'src/db/migrations',
     })
-    console.log('database migrations completed successfully')
+    logger.info('database migrations completed successfully')
   } catch (err) {
-    console.error(err)
+    logger.error('migration failed', { err: String(err) })
     process.exit(1)
   }
 

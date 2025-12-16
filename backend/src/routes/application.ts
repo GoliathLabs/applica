@@ -13,6 +13,7 @@ import { jwt } from 'hono/jwt'
 import { env } from 'hono/adapter'
 import { StatusCodes } from 'http-status-codes'
 import { getLdapClient, ldapConfig, safeUnbind } from '../ldap'
+import { logger } from '../common/logger'
 import { randomNumber, randomPassword, normalizeSpecialCharacters } from '../common/util'
 import { createHash } from 'crypto'
 import { AlreadyExistsError } from 'ldapts'
@@ -281,7 +282,7 @@ app.post('/status', zValidator('json', UpdateApplicationStatus), async (c) => {
               : userEntry
           )
 
-          console.info(`User ${cn} with password ${pass} added`)
+          logger.info(`User ${cn} created`, { email: rawApplication.email })
           await sendEmail(rawApplication.email, uid, pass);
 
           break

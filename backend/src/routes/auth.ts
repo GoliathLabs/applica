@@ -5,6 +5,7 @@ import { getLdapClient, ldapConfig, safeUnbind } from '../ldap'
 import { HTTPException } from 'hono/http-exception'
 import { Client } from 'ldapts'
 import { StatusCodes } from 'http-status-codes'
+import { logger } from '../common/logger'
 import { jwt, sign } from 'hono/jwt'
 import { env } from 'hono/adapter'
 
@@ -17,6 +18,7 @@ app.post('/login', zValidator('json', Login), async (c) => {
     ldapAdmin = await getLdapClient()
   } catch (err) {
     // LDAP backend unavailable
+    logger.error('LDAP unavailable for login', { err: String(err) })
     throw new HTTPException(StatusCodes.SERVICE_UNAVAILABLE, {
       message: 'Authentication service unavailable',
     })
@@ -76,6 +78,8 @@ app.post('/login', zValidator('json', Login), async (c) => {
     })
   } catch (err) {
     if (err instanceof HTTPException) throw err
+
+    logger.warn('Authentication failed', { err: String(err) })
 
     // For LDAP specific errors we return a generic unauthorized to avoid leaking details
     throw new HTTPException(StatusCodes.UNAUTHORIZED, {

@@ -1,5 +1,6 @@
 import { Client } from 'ldapts'
 import { getEnv } from './common/util'
+import { logger } from './common/logger'
 
 export const ldapConfig = {
   url: getEnv('LDAP_URL'),
@@ -50,7 +51,7 @@ export async function safeUnbind(client?: Client) {
     await client.unbind()
   } catch (err) {
     // log and ignore - unbind failures should not crash the request
-    // eslint-disable-next-line no-console
-    console.warn('LDAP unbind failed:', err)
+    // prefer structured logging
+    logger.warn('LDAP unbind failed', { err: String(err) })
   }
 }

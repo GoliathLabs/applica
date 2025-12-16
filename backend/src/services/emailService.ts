@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import type { SentMessageInfo } from 'nodemailer';
 import { getEnv } from '../common/util';
+import { logger } from '../common/logger';
 /**
  * Create reusable transporter with nodemailer settings.
  */
@@ -60,10 +61,10 @@ export const sendEmail = async (email: string, username: string, password: strin
             }
         });
 
-        console.log('E-Mail erfolgreich gesendet!', info);
+        logger.info('E-Mail erfolgreich gesendet', { info: String(info) });
         return info;
     } catch (error) {
-        console.error('Fehler beim E-Mail-Versand:', error);
+        logger.error('Fehler beim E-Mail-Versand', { err: String(error) });
         throw new Error('E-Mail-Versand fehlgeschlagen');
     }
 };

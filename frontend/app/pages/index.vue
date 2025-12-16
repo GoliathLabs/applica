@@ -4,7 +4,7 @@ import type {
   DataTableFilterMeta,
   DataTableFilterMetaData,
 } from 'primevue/datatable';
-import type { Application, ApplicationStatus, Field } from '~/types/applicaion';
+import type { Application, ApplicationStatus, Field } from '~/types/application';
 
 definePageMeta({
   middleware: ['authorized'],

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { Application } from '~/types/applicaion'
-import { AddApplication } from '~/types/applicaion.schema'
+import { storeToRefs } from 'pinia'
+import type { Application } from '~/types/application'
+import { AddApplication } from '~/types/application.schema'
 
 type Props = {
   application?: Application
@@ -10,9 +11,7 @@ const { application } = defineProps<Props>()
 const visible = defineModel<boolean>('visible')
 
 const applicationsStore = useApplicationsStore()
-await useAsyncData('applications', () =>
-  applicationsStore.fetchFieldsAndCourses().then(() => true)
-)
+const { courses, fields } = storeToRefs(applicationsStore)
 
 const { handleSubmit, isSubmitting, resetForm } = useForm({
   validationSchema: toTypedSchema(AddApplication),
@@ -37,9 +36,9 @@ watch(
 )
 
 const onSubmit = handleSubmit(async (values) => {
-  const action = application ? 'udpate' : 'add'
+  const action = application ? 'update' : 'add'
 
-  if (action === 'udpate') {
+  if (action === 'update') {
     await applicationsStore.updateApplication(values)
   } else {
     await applicationsStore.addApplication(values)
@@ -47,9 +46,9 @@ const onSubmit = handleSubmit(async (values) => {
 
   toast.add({
     severity: 'success',
-    summary: action === 'udpate' ? 'Updated' : 'Added',
+    summary: action === 'update' ? 'Updated' : 'Added',
     detail: `
-      You have ${action === 'udpate' ? 'updated the' : 'added an'} application
+      You have ${action === 'update' ? 'updated the' : 'added an'} application
       for ${values.firstName} ${values.lastName}`,
     life: 3000,
   })
@@ -90,14 +89,15 @@ const onSubmit = handleSubmit(async (values) => {
         <FormSelect
           name="courseId"
           label="Course"
-          :options="applicationsStore.courses"
+          :options="courses"
           option-label="name"
           option-value="id"
+          :loading="!courses.length"
         />
         <FormSelect
           name="fields"
           label="Fields"
-          :options="applicationsStore.fields"
+          :options="fields"
           option-label="name"
           option-value="id"
           multi

@@ -8,9 +8,9 @@ import type {
   AddApplicationResponse,
   RawApplicationWithFields,
   UpdateApplicationResponse,
-} from '~/types/applicaion'
+} from '~/types/application'
 import type { z } from 'zod'
-import type { AddApplication } from '~/types/applicaion.schema'
+import type { AddApplication } from '~/types/application.schema'
 
 export const useApplicationsStore = defineStore('applications', () => {
   const $applications = ref<Application[]>([])

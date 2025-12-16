@@ -35,7 +35,7 @@ export type Application = {
   fields: Field[]
 }
 
-type ApplicaionFields = {
+type applicationFields = {
   applicationId: number
   fieldId: number
 }
@@ -45,7 +45,7 @@ export type RawApplicationWithFields = Omit<
   'course' | 'fields'
 > & {
   courseId: number
-  fields: ApplicaionFields[]
+  fields: applicationFields[]
 }
 
 export type DeleteApplicationResponse = Pick<Application, 'id'>

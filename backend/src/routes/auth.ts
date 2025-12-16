@@ -7,6 +7,7 @@ import { Client } from 'ldapts'
 import { StatusCodes } from 'http-status-codes'
 import { jwt, sign } from 'hono/jwt'
 import { env } from 'hono/adapter'
+import { StatusCodes } from 'http-status-codes'
 
 export const app = new Hono().basePath('/auth')
 
@@ -80,9 +81,14 @@ app.post('/login', zValidator('json', Login), async (c) => {
 })
 
 app.use('*', (c, next) => {
-  const jwtMiddleware = jwt({
-    secret: env<{ JWT_SECRET: string }>(c).JWT_SECRET,
-  })
+  const secret = env<{ JWT_SECRET: string }>(c).JWT_SECRET
+
+  if (!secret) {
+    console.error('JWT secret missing in environment for protected auth routes')
+    return c.json({ message: 'Server misconfigured' }, StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+
+  const jwtMiddleware = jwt({ secret, options: { algorithms: ['HS256'] } as any })
 
   return jwtMiddleware(c, next)
 })

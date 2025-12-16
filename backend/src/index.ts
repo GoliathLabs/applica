@@ -9,6 +9,17 @@ import { HTTPException } from 'hono/http-exception';
 import { rateLimit } from './middleware/rateLimit'
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 
+// Ensure JWT secret is set in production; warn in development
+const JWT_SECRET = process.env.JWT_SECRET
+if (!JWT_SECRET) {
+  if (process.env.NODE_ENV === 'production') {
+    console.error('JWT_SECRET must be set in production environment')
+    process.exit(1)
+  } else {
+    console.warn('JWT_SECRET is not set. Protected routes will reject requests if used.');
+  }
+}
+
 const app = new Hono().basePath('/api');
 
 // Limit request body size to 100 KiB by default to mitigate large payloads

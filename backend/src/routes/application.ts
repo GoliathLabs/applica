@@ -11,6 +11,7 @@ import {
 import { eq } from 'drizzle-orm'
 import { jwt } from 'hono/jwt'
 import { env } from 'hono/adapter'
+import { StatusCodes } from 'http-status-codes'
 import { getLdapClient, ldapConfig } from '../ldap'
 import { randomNumber, randomPassword, normalizeSpecialCharacters } from '../common/util'
 import { createHash } from 'crypto'
@@ -54,8 +55,17 @@ app.post('/', zValidator('json', InsertApplication), async (c) => {
 })
 
 app.use('*', (c, next) => {
+  const secret = env<{ JWT_SECRET: string }>(c).JWT_SECRET
+
+  if (!secret) {
+    console.error('JWT secret missing in environment for protected routes')
+    return c.json({ message: 'Server misconfigured' }, StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+
   const jwtMiddleware = jwt({
-    secret: env<{ JWT_SECRET: string }>(c).JWT_SECRET,
+    secret,
+    // enforce HS256 algorithm for tokens
+    options: { algorithms: ['HS256'] } as any,
   })
 
   return jwtMiddleware(c, next)

@@ -23,7 +23,38 @@ if (!JWT_SECRET) {
 const app = new Hono().basePath('/api');
 
 // Limit request body size to 100 KiB by default to mitigate large payloads
-app.use(limitBodySize(1024 * 100), logger(), secureHeaders(), prettyJSON(), cors());
+const FRONTEND_ORIGINS = (process.env.FRONTEND_ORIGIN || 'http://localhost:3000')
+  .split(',')
+  .map((s) => s.trim())
+
+app.use(
+  limitBodySize(1024 * 100),
+  logger(),
+  secureHeaders(),
+  // Add a strict CSP header in production
+  async (c, next) => {
+    if (process.env.NODE_ENV === 'production') {
+      c.header(
+        'Content-Security-Policy',
+        "default-src 'self'; frame-ancestors 'none'; base-uri 'self'"
+      )
+    }
+
+    return next()
+  },
+  prettyJSON(),
+  // Restrict allowed origins to configured frontend origin(s)
+  cors({
+    origin: (origin) => {
+      // allow no-origin requests (e.g., curl/server-to-server) but check browser origins
+      if (!origin) return true
+      return FRONTEND_ORIGINS.includes(origin)
+    },
+    allowMethods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  })
+)
 
 // Apply rate limiting to the public applications endpoints (e.g., POST /applications)
 // Configure: 30 requests per minute per IP by default

@@ -1,19 +1,26 @@
 import { zValidator } from '@hono/zod-validator'
 import { Hono } from 'hono'
 import { Login } from '../models/auth'
-import { getLdapClient, ldapConfig } from '../ldap'
+import { getLdapClient, ldapConfig, safeUnbind } from '../ldap'
 import { HTTPException } from 'hono/http-exception'
 import { Client } from 'ldapts'
 import { StatusCodes } from 'http-status-codes'
 import { jwt, sign } from 'hono/jwt'
 import { env } from 'hono/adapter'
-import { StatusCodes } from 'http-status-codes'
 
 export const app = new Hono().basePath('/auth')
 
 app.post('/login', zValidator('json', Login), async (c) => {
   const req = c.req.valid('json')
-  const ldapAdmin = await getLdapClient()
+  let ldapAdmin
+  try {
+    ldapAdmin = await getLdapClient()
+  } catch (err) {
+    // LDAP backend unavailable
+    throw new HTTPException(StatusCodes.SERVICE_UNAVAILABLE, {
+      message: 'Authentication service unavailable',
+    })
+  }
 
   try {
     // Search for a user with the specified username
@@ -36,9 +43,9 @@ app.post('/login', zValidator('json', Login), async (c) => {
     // Do a LDAP bind to verify the users password
     const ldapUser = new Client({ url: ldapConfig.url })
     await ldapUser.bind(userEntries[0].dn, req.password)
-    await ldapUser.unbind()
+      await ldapUser.unbind()
 
-    // Check if the user is a field leader and therefor
+    // Check if the user is a field leader and therefore
     // has access to protected routes and the dashboard
     const { searchEntries: groupEntries } = await ldapAdmin.search(
       ldapConfig.fieldLeaderDn,
@@ -68,15 +75,14 @@ app.post('/login', zValidator('json', Login), async (c) => {
       token: await sign(payload, env<{ JWT_SECRET: string }>(c).JWT_SECRET),
     })
   } catch (err) {
-    if (err instanceof HTTPException) {
-      throw err
-    }
+    if (err instanceof HTTPException) throw err
 
+    // For LDAP specific errors we return a generic unauthorized to avoid leaking details
     throw new HTTPException(StatusCodes.UNAUTHORIZED, {
       message: 'Username or password is incorrect',
     })
   } finally {
-    await ldapAdmin.unbind()
+    await safeUnbind(ldapAdmin)
   }
 })
 

@@ -12,7 +12,7 @@ import { eq } from 'drizzle-orm'
 import { jwt } from 'hono/jwt'
 import { env } from 'hono/adapter'
 import { StatusCodes } from 'http-status-codes'
-import { getLdapClient, ldapConfig } from '../ldap'
+import { getLdapClient, ldapConfig, safeUnbind } from '../ldap'
 import { randomNumber, randomPassword, normalizeSpecialCharacters } from '../common/util'
 import { createHash } from 'crypto'
 import { AlreadyExistsError } from 'ldapts'
@@ -184,7 +184,15 @@ app.post('/status', zValidator('json', UpdateApplicationStatus), async (c) => {
   }
 
   if (req.status === 'accepted') {
-    const ldap = await getLdapClient()
+    let ldap
+    try {
+      ldap = await getLdapClient()
+    } catch (err) {
+      throw new HTTPException(StatusCodes.SERVICE_UNAVAILABLE, {
+        message: 'User provisioning service unavailable',
+      })
+    }
+
     try {
       // Get all uid entries
       const { searchEntries: uidEntries } = await ldap.search(
@@ -293,8 +301,21 @@ app.post('/status', zValidator('json', UpdateApplicationStatus), async (c) => {
           message: 'User with uid already exists',
         })
       }
+    } catch (err) {
+      // Bubble AlreadyExistsError to be handled by caller logic above;
+      if (err instanceof AlreadyExistsError) throw err
+
+      // If LDAP reported unavailable, translate to 503
+      if (err instanceof Error && err.message === 'LDAP unavailable') {
+        throw new HTTPException(StatusCodes.SERVICE_UNAVAILABLE, {
+          message: 'User provisioning service unavailable',
+        })
+      }
+
+      // otherwise rethrow to be handled by global error handler
+      throw err
     } finally {
-      await ldap.unbind()
+      await safeUnbind(ldap)
     }
   }
 

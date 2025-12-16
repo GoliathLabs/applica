@@ -107,13 +107,18 @@ export const useApplicationsStore = defineStore('applications', () => {
 
     return {
       ...data,
-      course: $courses.value.find((course) => course.id === courseId)!,
-      fields: fields.map(
-        (fieldRelation) =>
-          $fields.value.find((field) => field.id === fieldRelation.fieldId)!
-      ),
+      course:
+        $courses.value.find((course) => course.id === courseId) ??
+        ({ id: courseId, name: '—' } as Course),
+
+      fields: fields
+        .map((fieldRelation) =>
+          $fields.value.find((field) => field.id === fieldRelation.fieldId)
+        )
+        .filter(Boolean) as Field[],
     }
   }
+
 
   return {
     applications: $applications,

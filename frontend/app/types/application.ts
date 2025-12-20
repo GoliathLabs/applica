@@ -29,6 +29,7 @@ export type Application = {
   clubBriefed?: boolean
   securityBriefed?: boolean
   information?: string
+  customField?: string
   created: string
   updatedAt: string
   course: Course

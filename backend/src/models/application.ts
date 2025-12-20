@@ -40,6 +40,7 @@ export const InsertApplication = BaseSchema.pick({
     phone: phoneSchema,
     degree: optionalString(50),
     experience: optionalString(2000),
+    customField: optionalString(255),
     fields: z
       .array(z.number().int().positive())
       .min(1)
@@ -70,6 +71,7 @@ export const UpdateApplication = BaseSchema.partial()
     phone: phoneSchema,
     degree: optionalString(50),
     experience: optionalString(2000),
+    customField: optionalString(255),
     fields: z
       .array(z.number().int().positive())
       .min(0)

@@ -13,6 +13,7 @@ export const AddApplication = z.object({
 
   courseId: z.coerce.number(),
   fields: z.array(z.coerce.number()),
+  customField: z.string().max(255).nullish(),
 
   experience: z.string().nullish(),
 

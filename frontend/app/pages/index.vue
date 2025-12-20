@@ -45,8 +45,12 @@ function getSeverity(status: ApplicationStatus): string {
   return severityMapping[status];
 }
 
-function formatFields(fields: Field[]): string {
-  return fields.map((field) => field.name).join(', ');
+function formatFields(fields: Field[], customField?: string): string {
+  const fieldNames = fields.map((field) => field.name).join(', ');
+  if (customField) {
+    return fieldNames ? `${fieldNames}, ${customField}` : customField;
+  }
+  return fieldNames;
 }
 
 function formatDate(date: string): string {
@@ -207,7 +211,7 @@ function closeDetailDialog(): void {
           <Column field="degree" header="Degree" sortable />
           <Column field="fields" header="Fields" sortable>
             <template #body="slotProps">
-              {{ formatFields(slotProps.data.fields) }}
+              {{ formatFields(slotProps.data.fields, slotProps.data.customField) }}
             </template>
           </Column>
           <Column field="created" header="Created" sortable>

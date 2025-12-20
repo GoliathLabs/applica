@@ -110,6 +110,13 @@ const onSubmit = handleSubmit(async (values) => {
         />
 
         <FormInputText
+          name="customField"
+          label="Custom Field"
+          placeholder="Other field (optional)"
+          class="sm:col-span-2"
+        />
+
+        <FormInputText
           name="experience"
           label="Experience"
           type="area"

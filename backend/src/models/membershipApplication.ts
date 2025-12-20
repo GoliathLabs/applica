@@ -37,7 +37,9 @@ const bicSchema = z
   .string()
   .regex(/^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/, 'Invalid BIC format')
   .transform((s) => s.toUpperCase())
-  .optional();
+  .optional()
+  .or(z.literal(''))
+  .transform((s) => (s === '' ? undefined : s));
 
 export const InsertMembershipApplication = BaseSchema.pick({
   firstName: true,

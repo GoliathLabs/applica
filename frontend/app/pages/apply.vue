@@ -37,11 +37,23 @@ const onSubmit = handleSubmit(async (values) => {
 
     // Scroll to top to show success message
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  } catch {
+  } catch (err) {
+    // Provide more specific error messages
+    let errorMessage = 'Der Antrag konnte nicht eingereicht werden. Bitte versuchen Sie es später erneut.'
+    
+    if (err && typeof err === 'object' && 'message' in err) {
+      const errorText = String(err.message).toLowerCase()
+      if (errorText.includes('network') || errorText.includes('fetch')) {
+        errorMessage = 'Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.'
+      } else if (errorText.includes('validation') || errorText.includes('invalid')) {
+        errorMessage = 'Validierungsfehler. Bitte überprüfen Sie Ihre Eingaben.'
+      }
+    }
+    
     toast.add({
       severity: 'error',
       summary: 'Fehler',
-      detail: 'Der Antrag konnte nicht eingereicht werden. Bitte versuchen Sie es später erneut.',
+      detail: errorMessage,
       life: 5000,
     })
   }

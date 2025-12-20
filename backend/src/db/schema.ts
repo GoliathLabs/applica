@@ -59,6 +59,7 @@ export const applications = pgTable('applications', {
   clubBriefed: boolean('club_briefed').default(false),
   securityBriefed: boolean('security_briefed').default(false),
   information: varchar('information'),
+  customField: varchar('custom_field', { length: 255 }),
   created: timestamp('created').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })

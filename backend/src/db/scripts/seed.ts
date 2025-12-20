@@ -19,9 +19,11 @@ async function seedDatabase(): Promise<void> {
       const insertedFields = await tx
         .insert(fields)
         .values([
-          { name: 'Driverless' },
-          { name: 'Robotics' },
-          { name: 'Marketing' },
+          { name: 'Unentschlossen' },
+          { name: 'Software' },
+          { name: 'Electric' },
+          { name: 'Mechanic' },
+          { name: 'Operations' },
         ])
         .returning()
 

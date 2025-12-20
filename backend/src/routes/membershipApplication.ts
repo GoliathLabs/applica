@@ -6,7 +6,6 @@ import {
   InsertMembershipApplication,
   UpdateMembershipApplicationStatus,
   UpdateMembershipApplication,
-  type MembershipApplicationWithDetails,
 } from '../models/membershipApplication';
 import { eq } from 'drizzle-orm';
 import { jwt } from 'hono/jwt';
@@ -79,6 +78,7 @@ app.use('*', (c, next) => {
 
   const jwtMiddleware = jwt({
     secret,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     options: { algorithms: ['HS256'] } as any,
   });
 

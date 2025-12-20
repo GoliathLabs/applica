@@ -37,7 +37,7 @@ const onSubmit = handleSubmit(async (values) => {
 
     // Scroll to top to show success message
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  } catch (error) {
+  } catch {
     toast.add({
       severity: 'error',
       summary: 'Fehler',
@@ -47,7 +47,7 @@ const onSubmit = handleSubmit(async (values) => {
   }
 })
 
-const startNewApplication = () => {
+const startNewApplication = (): void => {
   submitted.value = false
   applicationId.value = null
   resetForm()

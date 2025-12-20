@@ -5,7 +5,9 @@ type Props = {
   application?: MembershipApplication | null
 }
 
-const { application } = defineProps<Props>()
+const { application } = withDefaults(defineProps<Props>(), {
+  application: null,
+})
 const visible = defineModel<boolean>('visible')
 
 function formatDate(date: string): string {

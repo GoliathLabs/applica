@@ -7,14 +7,14 @@ const BaseSchema = createInsertSchema(membershipApplications, {
   birthDate: (z) => z.string().date(),
 });
 
-const nameString = () =>
+const nameString = (): z.ZodEffects<z.ZodString, string, string> =>
   z
     .string()
     .min(1)
     .max(100)
     .transform((s) => s.trim());
 
-const addressString = () =>
+const addressString = (): z.ZodEffects<z.ZodString, string, string> =>
   z
     .string()
     .min(1)

@@ -28,7 +28,7 @@ async function seedDatabase(): Promise<void> {
           { name: 'Biomedizinische Technik (B.Eng.)' },
           { name: 'Leichtbau und Simulation (B.Eng.)' },
           { name: 'Data Science (B.Sc.)' },
-          
+
           // Master Programs
           { name: 'Informatik (M.Sc.)' },
           { name: 'Interaktive Mediensysteme (M.A.)' },
@@ -41,7 +41,7 @@ async function seedDatabase(): Promise<void> {
           { name: 'Leichtbau und Faserverbundtechnologie (M.Eng.)' },
           { name: 'Umwelt- und Verfahrenstechnik (M.Eng.)' },
           { name: 'Systems Engineering (M.Eng.)' },
-          
+
           // Specialized Programs
           { name: 'Startfenster' },
           { name: 'Startklar' },

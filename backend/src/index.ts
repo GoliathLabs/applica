@@ -3,7 +3,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { secureHeaders } from 'hono/secure-headers';
 import { prettyJSON } from 'hono/pretty-json';
-import { applications, fields, courses, auth } from './routes';
+import { applications, fields, courses, auth, membershipApplications } from './routes';
 import { limitBodySize } from './middleware/limitBodySize'
 import { requestIdMiddleware } from './middleware/requestId'
 import { HTTPException } from 'hono/http-exception';
@@ -70,11 +70,14 @@ app.use(
 // Configure: 30 requests per minute per IP by default
 // Apply rate limiting to POST on the public applications endpoint: 10 requests/min per IP
 app.use('/applications', rateLimit({ windowMs: 60_000, max: 10, methods: ['POST'] }))
+// Apply rate limiting to POST on the public membership applications endpoint: 5 requests/min per IP
+app.use('/membership-applications', rateLimit({ windowMs: 60_000, max: 5, methods: ['POST'] }))
 
 app.route('/', applications.app);
 app.route('/', fields.app);
 app.route('/', courses.app);
 app.route('/', auth.app);
+app.route('/', membershipApplications.app);
 
 app.notFound((c) => c.json({ message: 'Not Found' }, StatusCodes.NOT_FOUND));
 

@@ -1,6 +1,18 @@
 # `Applica` 👥
 
-A full-stack platform for managing user applications, designed for university clubs.
+A full-stack platform for managing user applications and memberships, designed for university clubs.
+
+## Features
+
+- **Course Applications**: Students can apply to join university clubs/courses
+- **Membership Applications**: Digital membership application system with:
+  - Public form for submitting membership applications
+  - IBAN/BIC validation for payment details
+  - Digital signature tracking (timestamp, IP address)
+  - Email notifications for confirmations and status updates
+  - Admin interface for managing applications
+- **LDAP Integration**: Automatic user account creation upon acceptance
+- **Email Notifications**: Automated emails for application status updates
 
 ## Development
 
@@ -67,3 +79,44 @@ docker compose up --profile prod --build
 Notes:
 - For production, set `NODE_ENV=production` and ensure `JWT_SECRET` is set (process exits if missing).
 - If you deploy the frontend as a static build, set `PUBLIC_API_BASE_URL` at build or runtime depending on your hosting.
+
+## Database Migrations
+
+After setting up the database, run migrations:
+
+```bash
+cd backend
+bun run db:migrate
+```
+
+This will create all necessary tables including:
+- Course applications and fields
+- Membership applications
+- User management tables
+
+## Public Pages
+
+The following pages are publicly accessible without authentication:
+
+- `/apply` - Digital membership application form (Mitgliedsantrag)
+
+## Admin Pages
+
+The following pages require authentication:
+
+- `/` - Course applications management
+- `/memberships` - Membership applications management
+
+## Email Configuration
+
+For the membership application feature to send confirmation emails, configure SMTP settings in `.env`:
+
+```bash
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=user@example.com
+SMTP_PASS=supersecret
+SMTP_FROM_NAME="Applica"
+SMTP_FROM_EMAIL=no-reply@example.com
+SMTP_REPLY_TO=reply@example.com
+```

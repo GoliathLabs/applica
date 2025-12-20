@@ -8,6 +8,8 @@ import {
   varchar,
   timestamp,
   primaryKey,
+  text,
+  date,
 } from 'drizzle-orm/pg-core'
 
 // `courses` table
@@ -103,3 +105,46 @@ export const applicatoinsFieldsRelations = relations(
     }),
   })
 )
+
+// `membership_applications` table
+export const membershipStatus = pgEnum('membershipstatus', [
+  'pending',
+  'approved',
+  'rejected',
+])
+
+export const membershipType = pgEnum('membershiptype', [
+  'regular',
+  'supporting',
+])
+
+export const membershipApplications = pgTable('membership_applications', {
+  id: serial('id').primaryKey(),
+  // Personal information
+  firstName: varchar('first_name', { length: 100 }).notNull(),
+  lastName: varchar('last_name', { length: 100 }).notNull(),
+  birthDate: date('birth_date').notNull(),
+  // Contact information
+  email: varchar('email', { length: 255 }).notNull(),
+  phone: varchar('phone', { length: 50 }),
+  // Address
+  street: varchar('street', { length: 255 }).notNull(),
+  postalCode: varchar('postal_code', { length: 20 }).notNull(),
+  city: varchar('city', { length: 100 }).notNull(),
+  country: varchar('country', { length: 100 }).notNull(),
+  // Bank details for membership fee
+  iban: varchar('iban', { length: 34 }).notNull(),
+  bic: varchar('bic', { length: 11 }),
+  accountHolder: varchar('account_holder', { length: 255 }).notNull(),
+  // Membership details
+  membershipType: membershipType('membership_type').notNull().default('regular'),
+  // Digital signature
+  signatureData: text('signature_data'), // Base64 encoded signature image
+  signatureTimestamp: timestamp('signature_timestamp'),
+  signatureIp: varchar('signature_ip', { length: 45 }), // IPv4 or IPv6
+  // Status and metadata
+  status: membershipStatus('status').notNull().default('pending'),
+  notes: text('notes'), // Admin notes
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+})

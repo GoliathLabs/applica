@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 export function limitBodySize(maxBytes = 1024 * 100) {
   return async (c: any, next: any) => {
     try {
-      const lenHeader = c.req.headers.get('content-length')
+      const lenHeader = c.req.header('content-length')
       if (lenHeader) {
         const len = parseInt(lenHeader, 10)
         if (!Number.isNaN(len) && len > maxBytes) {

@@ -2,9 +2,7 @@ import { z } from 'zod';
 import { applications, applicationsFields } from '../db';
 import { createInsertSchema } from 'drizzle-zod';
 
-const BaseSchema = createInsertSchema(applications, {
-  email: (z) => z.string().email(),
-});
+const BaseSchema = createInsertSchema(applications);
 
 const nameString = () =>
   z

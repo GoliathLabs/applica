@@ -10,9 +10,41 @@ async function seedDatabase(): Promise<void> {
       const insertedCourses = await tx
         .insert(courses)
         .values([
-          { name: 'Computer Science' },
-          { name: 'Mechanical Engineering' },
-          { name: 'Business Administration' },
+          // Bachelor Programs
+          { name: 'Informatik (B.Sc.)' },
+          { name: 'Wirtschaftsinformatik (B.Sc.)' },
+          { name: 'Interaktive Medien (B.A.)' },
+          { name: 'Maschinenbau (B.Eng.)' },
+          { name: 'Mechatronik (B.Eng.)' },
+          { name: 'Elektrotechnik (B.Eng.)' },
+          { name: 'Wirtschaftsingenieurwesen (B.Eng.)' },
+          { name: 'Bauingenieurwesen (B.Eng.)' },
+          { name: 'Architektur (B.A.)' },
+          { name: 'Betriebswirtschaft (B.A.)' },
+          { name: 'Internationale Betriebswirtschaft (B.A.)' },
+          { name: 'Wirtschaftsrecht (LL.B.)' },
+          { name: 'Umwelt- und Verfahrenstechnik (B.Eng.)' },
+          { name: 'Energieeffizientes Planen und Bauen (B.Eng.)' },
+          { name: 'Biomedizinische Technik (B.Eng.)' },
+          { name: 'Leichtbau und Simulation (B.Eng.)' },
+          { name: 'Data Science (B.Sc.)' },
+
+          // Master Programs
+          { name: 'Informatik (M.Sc.)' },
+          { name: 'Interaktive Mediensysteme (M.A.)' },
+          { name: 'Maschinenbau (M.Eng.)' },
+          { name: 'Wirtschaftsingenieurwesen (M.Eng.)' },
+          { name: 'Elektrotechnik (M.Eng.)' },
+          { name: 'Architektur (M.A.)' },
+          { name: 'Bauingenieurwesen (M.Eng.)' },
+          { name: 'Technologie-Management (MBA)' },
+          { name: 'Leichtbau und Faserverbundtechnologie (M.Eng.)' },
+          { name: 'Umwelt- und Verfahrenstechnik (M.Eng.)' },
+          { name: 'Systems Engineering (M.Eng.)' },
+
+          // Specialized Programs
+          { name: 'Startfenster' },
+          { name: 'Startklar' },
         ])
         .returning()
 

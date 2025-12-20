@@ -22,9 +22,9 @@ export function rateLimit(opts?: { windowMs?: number; max?: number; methods?: st
 
       // Determine client IP (best-effort)
       const ip =
-        c.req.headers.get('x-forwarded-for') ||
-        c.req.headers.get('x-real-ip') ||
-        c.req.headers.get('cf-connecting-ip') ||
+        c.req.header('x-forwarded-for') ||
+        c.req.header('x-real-ip') ||
+        c.req.header('cf-connecting-ip') ||
         'unknown'
 
       const now = Date.now()
